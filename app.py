@@ -24,25 +24,26 @@ VALID_DDDS = {
     "91", "92", "93", "94", "95", "96", "97", "98", "99",
 }
 
+NOME_CURSO = "📚 ENCCEJA"
+
 # ──────────────────────────────────────────────
 # LOCAIS
 # ──────────────────────────────────────────────
 LOCAL_OPTIONS = [
-    {"id": "1", "nome": "NULCEO PENHA (PROGRAMA JOS\u00dA ARANHA)"},
+    {"id": "1", "nome": "NÚCLEO PENHA (PROGRAMA JOSUÉ ARANHA)"},
 ]
 
 # ──────────────────────────────────────────────
 # CATÁLOGO DE CURSOS
 # ──────────────────────────────────────────────
 COURSE_CATALOG = [
-    {"id": "1", "nome": "ENCCEJA"},
+    {"id": "1", "nome": NOME_CURSO},
 ]
 
 # ──────────────────────────────────────────────
 # TURMAS
 # ──────────────────────────────────────────────
 TURMA_OPTIONS = [
-    # ENCCEJA — TURMA 01
     {
         "id": "1",
         "local_id": "1",
@@ -53,7 +54,6 @@ TURMA_OPTIONS = [
         "encerramento_id": "1",
         "endereco_id": "1",
     },
-    # ENCCEJA — TURMA 02
     {
         "id": "2",
         "local_id": "1",
@@ -70,8 +70,8 @@ TURMA_OPTIONS = [
 # HORÁRIOS
 # ──────────────────────────────────────────────
 SCHEDULE_OPTIONS = {
-    "1": {"dias_aula": "Quarta e Sabado", "horario": "18h30 \u00e0s 21h30"},
-    "2": {"dias_aula": "Sabado", "horario": "8h \u00e0s 14h"},
+    "1": {"dias_aula": "Quarta e Sábado", "horario": "18h30 às 21h30"},
+    "2": {"dias_aula": "Sábado", "horario": "8h às 14h"},
 }
 
 # ──────────────────────────────────────────────
@@ -93,37 +93,40 @@ END_DATE_OPTIONS = {
 # ENDEREÇOS
 # ──────────────────────────────────────────────
 ADDRESS_OPTIONS = {
-    "1": "\U0001f4cdRua Nossa Senhora Aparecida, n\u00b0 46, Penha - Rio de Janeiro",
+    "1": "📍Rua Nossa Senhora Aparecida, n° 46, Penha - Rio de Janeiro",
 }
 
+
 def build_course_options():
-    local_options_by_id  = {option["id"]: option for option in LOCAL_OPTIONS}
-    course_catalog_by_id = {option["id"]: option for option in COURSE_CATALOG}
+    local_options_by_id  = {o["id"]: o for o in LOCAL_OPTIONS}
+    course_catalog_by_id = {o["id"]: o for o in COURSE_CATALOG}
     course_options = []
-    for turma_option in TURMA_OPTIONS:
-        local    = local_options_by_id[turma_option["local_id"]]
-        course   = course_catalog_by_id[turma_option["curso_id"]]
-        schedule = SCHEDULE_OPTIONS[turma_option["agenda_id"]]
+    for t in TURMA_OPTIONS:
+        local    = local_options_by_id[t["local_id"]]
+        course   = course_catalog_by_id[t["curso_id"]]
+        schedule = SCHEDULE_OPTIONS[t["agenda_id"]]
         course_options.append({
-            "id":             turma_option["id"],
-            "local_id":       turma_option["local_id"],
-            "curso_id":       turma_option["curso_id"],
+            "id":             t["id"],
+            "local_id":       t["local_id"],
+            "curso_id":       t["curso_id"],
             "local":          local["nome"],
             "curso":          course["nome"],
-            "turma":          f"{course['nome']} - TURMA {turma_option['turma_codigo']}",
+            "turma":          f"{course['nome']} - TURMA {t['turma_codigo']}",
             "dias_aula":      schedule["dias_aula"],
             "horario":        schedule["horario"],
-            "data_inicio":    START_DATE_OPTIONS[turma_option["periodo_id"]],
-            "encerramento":   END_DATE_OPTIONS[turma_option["encerramento_id"]],
-            "endereco_curso": ADDRESS_OPTIONS[turma_option["endereco_id"]],
+            "data_inicio":    START_DATE_OPTIONS[t["periodo_id"]],
+            "encerramento":   END_DATE_OPTIONS[t["encerramento_id"]],
+            "endereco_curso": ADDRESS_OPTIONS[t["endereco_id"]],
         })
     return course_options
 
+
 COURSE_OPTIONS       = build_course_options()
-LOCAL_OPTIONS_BY_ID  = {option["id"]: option for option in LOCAL_OPTIONS}
-COURSE_CATALOG_BY_ID = {option["id"]: option for option in COURSE_CATALOG}
-COURSE_OPTIONS_BY_ID = {option["id"]: option for option in COURSE_OPTIONS}
+LOCAL_OPTIONS_BY_ID  = {o["id"]: o for o in LOCAL_OPTIONS}
+COURSE_CATALOG_BY_ID = {o["id"]: o for o in COURSE_CATALOG}
+COURSE_OPTIONS_BY_ID = {o["id"]: o for o in COURSE_OPTIONS}
 COURSE_INFO          = COURSE_OPTIONS[0]
+
 
 def build_whatsapp_share_url(home_url):
     message = (
@@ -132,14 +135,14 @@ def build_whatsapp_share_url(home_url):
     )
     return f"https://wa.me/?text={quote(message)}"
 
+
 def get_course_option(option_id):
     return COURSE_OPTIONS_BY_ID.get(str(option_id or ""))
+
 
 def get_local_option(local_id):
     return LOCAL_OPTIONS_BY_ID.get(str(local_id or ""))
 
-def get_course_catalog_option(course_id):
-    return COURSE_CATALOG_BY_ID.get(str(course_id or ""))
 
 def fill_form_data_from_option(form_data, option):
     form_data["local_id"]       = option["local_id"]
@@ -153,6 +156,7 @@ def fill_form_data_from_option(form_data, option):
     form_data["encerramento"]   = option["encerramento"]
     form_data["endereco_curso"] = option["endereco_curso"]
 
+
 def fill_form_data_from_selection(form_data):
     selected_local  = get_local_option(form_data.get("local_id"))
     selected_option = get_course_option(form_data.get("opcao_id"))
@@ -163,7 +167,8 @@ def fill_form_data_from_selection(form_data):
     if selected_option:
         fill_form_data_from_option(form_data, selected_option)
 
-TEMPLATE_WIZARD = r'''
+# O template usa {{ nome_curso }} para evitar o bug do escape Unicode dentro de raw strings
+TEMPLATE_WIZARD = """
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -174,25 +179,10 @@ TEMPLATE_WIZARD = r'''
     <link rel="stylesheet" href="/static/assistant.css">
     <link href="https://fonts.googleapis.com/css2?family=Wise:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --cor-principal: #1155cc;
-            --cor-principal-escura: #0d47a1;
-            --cor-clara: #eef4ff;
-            --cor-texto: #17386d;
-            --cor-borda: #a8c0f4;
-            --sombra-card: 0 18px 55px rgba(17, 85, 204, 0.18);
-        }
+        :root { --cor-principal: #1155cc; --cor-principal-escura: #0d47a1; --cor-clara: #eef4ff; --cor-texto: #17386d; --cor-borda: #a8c0f4; --sombra-card: 0 18px 55px rgba(17, 85, 204, 0.18); }
         * { box-sizing: border-box; }
         html, body { min-height: 100%; margin: 0; padding: 0; }
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at top left, rgba(17, 85, 204, 0.14), transparent 34%),
-                radial-gradient(circle at top right, rgba(211, 226, 255, 0.82), transparent 32%),
-                linear-gradient(135deg, #f5f9ff 0%, #fff 42%, #dfeaff 100%);
-            color: var(--cor-texto);
-            font-family: 'Wise', Arial, sans-serif;
-        }
+        body { min-height: 100vh; background: radial-gradient(circle at top left, rgba(17, 85, 204, 0.14), transparent 34%), radial-gradient(circle at top right, rgba(211, 226, 255, 0.82), transparent 32%), linear-gradient(135deg, #f5f9ff 0%, #fff 42%, #dfeaff 100%); color: var(--cor-texto); font-family: 'Wise', Arial, sans-serif; }
         .main-header { border-bottom: 4px solid var(--cor-principal); background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); }
         .wizard-page { width: min(900px, 98vw); margin: 0 auto; padding: 8px 0 18px; text-align: center; }
         .wizard-progress { margin: 18px auto 22px; padding: 18px 18px 20px; border-radius: 28px; background: rgba(255,255,255,0.9); box-shadow: 0 12px 30px rgba(17,85,204,0.12); }
@@ -202,10 +192,7 @@ TEMPLATE_WIZARD = r'''
         .wizard-label { padding: 12px 10px; border: 1px solid #c9daf8; border-radius: 18px; background: #fff; color: #2f5fb4; font-size: 0.92rem; font-weight: 700; text-align: center; transition: all 0.25s ease; }
         .wizard-label.ativo { border-color: var(--cor-principal); background: var(--cor-clara); color: var(--cor-principal); }
         .wizard-shell { background: rgba(255,255,255,0.88); border: 1px solid rgba(255,255,255,0.9); border-radius: 34px; box-shadow: var(--sombra-card); overflow: hidden; }
-        .wizard-panel[data-step="index"] .hero-card,
-        .wizard-panel[data-step="dados"] .step-card,
-        .wizard-panel[data-step="escolher"] .step-card,
-        .wizard-panel[data-step="revisao"] .step-card { max-width: 760px; margin: 0 auto; }
+        .wizard-panel[data-step="index"] .hero-card, .wizard-panel[data-step="dados"] .step-card, .wizard-panel[data-step="escolher"] .step-card, .wizard-panel[data-step="revisao"] .step-card { max-width: 760px; margin: 0 auto; }
         .wizard-panel { display: none; padding: 18px 8px; animation: surgir 0.28s ease; }
         .wizard-panel.ativo { display: block; }
         @keyframes surgir { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -216,7 +203,7 @@ TEMPLATE_WIZARD = r'''
         .panel-title { font-size: clamp(1.7rem, 3vw, 2.4rem); }
         .hero-subtitle, .panel-subtitle { margin: 0; color: #2f5fb4; font-size: 1.05rem; line-height: 1.55; }
         .hero-highlights { display: grid; gap: 10px; margin-top: 16px; }
-        .hero-highlight, .info-card, .review-box, .step-card { border-radius: 22px; border: 1px solid #d7e3fb; background: #fff; box-shadow: 0 8px 24px rgba(17,85,204,0.08); }
+        .hero-highlight, .review-box, .step-card { border-radius: 22px; border: 1px solid #d7e3fb; background: #fff; box-shadow: 0 8px 24px rgba(17,85,204,0.08); }
         .hero-highlight { padding: 12px 14px; color: #2f5fb4; font-size: 0.95rem; font-weight: 700; }
         .hero-highlight strong { display: block; color: var(--cor-principal); font-size: 1.15rem; margin-bottom: 4px; }
         .benefits-slider { display: grid; gap: 12px; margin-top: 8px; }
@@ -231,17 +218,14 @@ TEMPLATE_WIZARD = r'''
         .step-card { padding: 18px 16px; width: 100%; margin: 0 auto; text-align: center; }
         .step-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; margin-top: 10px; align-items: start; justify-content: center; }
         .step-grid.step-grid--stacked { grid-template-columns: minmax(0, 1fr); max-width: 540px; margin-left: auto; margin-right: auto; }
-        .wizard-panel[data-step="dados"] .form-group,
-        .wizard-panel[data-step="escolher"] .form-group { align-items: stretch; text-align: left; }
-        .wizard-panel[data-step="dados"] .form-group label,
-        .wizard-panel[data-step="escolher"] .form-group label { width: 100%; text-align: left; }
+        .wizard-panel[data-step="dados"] .form-group, .wizard-panel[data-step="escolher"] .form-group { align-items: stretch; text-align: left; }
+        .wizard-panel[data-step="dados"] .form-group label, .wizard-panel[data-step="escolher"] .form-group label { width: 100%; text-align: left; }
         .wizard-panel[data-step="escolher"] .step-grid.step-grid--stacked { max-width: 470px; }
-        .wizard-panel[data-step="escolher"] .form-group,
-        .wizard-panel[data-step="escolher"] .form-group.full { width: 100%; max-width: 100%; }
+        .wizard-panel[data-step="escolher"] .form-group, .wizard-panel[data-step="escolher"] .form-group.full { width: 100%; max-width: 100%; }
         .wizard-panel[data-step="escolher"] .input-with-action { width: 100%; max-width: 100%; }
         .form-group { display: flex; flex-direction: column; gap: 4px; width: 100%; align-self: start; align-items: center; text-align: center; }
         .form-group.full { grid-column: 1 / -1; }
-        .form-group label, .review-title, .mini-title { color: var(--cor-principal); font-size: 1rem; font-weight: 800; }
+        .form-group label, .review-title { color: var(--cor-principal); font-size: 1rem; font-weight: 800; }
         .form-group input, .form-group select, .form-group textarea { display: block; width: 100% !important; max-width: 100% !important; min-width: 0 !important; margin: 0 !important; box-sizing: border-box; min-height: 38px; height: 38px; padding: 7px 10px; border: 1.2px solid var(--cor-borda); border-radius: 10px; background: #f5f9ff; color: var(--cor-texto); font: inherit; line-height: 1.2; text-align: left; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease; }
         .form-group select { appearance: none; -webkit-appearance: none; -moz-appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill="%231155cc" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); background-repeat: no-repeat; background-position: right 14px center; background-size: 20px 20px; padding-right: 44px; }
         .form-group textarea { min-height: 60px; height: auto; resize: vertical; }
@@ -270,7 +254,7 @@ TEMPLATE_WIZARD = r'''
         .review-item strong { color: var(--cor-principal); font-size: 0.88rem; white-space: nowrap; }
         .review-item strong::after { content: ':'; }
         .review-item span { color: var(--cor-texto); font-size: 0.94rem; word-break: break-word; text-align: left; }
-        .review-check { display: flex; gap: 12px; align-items: flex-start; justify-content: flex-start; padding: 10px 12px; border-radius: 14px; background: var(--cor-clara); color: #6e3d37; line-height: 1.45; text-align: left; }
+        .review-check { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border-radius: 14px; background: var(--cor-clara); color: #6e3d37; line-height: 1.45; text-align: left; }
         .review-check input { margin-top: 3px; width: 20px; min-width: 20px; height: 20px; flex: 0 0 20px; accent-color: var(--cor-principal); }
         .review-check span { flex: 1 1 auto; min-width: 0; }
         .review-check ul { margin: 8px 0 0 18px; padding: 0; list-style-position: outside; text-align: left; }
@@ -355,9 +339,9 @@ TEMPLATE_WIZARD = r'''
                                         <div class="benefit-slide">Networking com outros participantes</div>
                                     </div>
                                     <div class="benefits-controls">
-                                        <button type="button" class="benefits-nav" data-benefits-prev aria-label="Benef&#237;cio anterior">&#8249;</button>
+                                        <button type="button" class="benefits-nav" data-benefits-prev>&#8249;</button>
                                         <div class="benefits-dots" data-benefits-dots></div>
-                                        <button type="button" class="benefits-nav" data-benefits-next aria-label="Pr&#243;ximo benef&#237;cio">&#8250;</button>
+                                        <button type="button" class="benefits-nav" data-benefits-next>&#8250;</button>
                                     </div>
                                 </div>
                             </div>
@@ -396,8 +380,8 @@ TEMPLATE_WIZARD = r'''
                     <div class="step-card">
                         <h2 class="panel-title">Escolha seu curso</h2>
                         <div class="step-grid step-grid--stacked">
-                            <div class="form-group"><label for="local_id">Local *</label><select id="local_id" name="local_id"><option value="">Selecione um local</option>{% for local_option in local_options %}<option value="{{ local_option.id }}" {% if form_data.get('local_id') == local_option.id %}selected{% endif %}>{{ local_option.nome }}</option>{% endfor %}</select><div class="balao-erro" id="local_id-error" {% if not errors.get('local_id') %}hidden{% endif %}>{{ errors.get('local_id', '') }}</div></div>
-                            <div class="form-group"><label for="curso">Curso</label><input type="text" id="curso" name="curso" class="readonly-field" readonly value="{{ form_data.get('curso', 'ENCCEJA') }}"></div>
+                            <div class="form-group"><label for="local_id">Local *</label><select id="local_id" name="local_id"><option value="">Selecione um local</option>{% for lo in local_options %}<option value="{{ lo.id }}" {% if form_data.get('local_id') == lo.id %}selected{% endif %}>{{ lo.nome }}</option>{% endfor %}</select><div class="balao-erro" id="local_id-error" {% if not errors.get('local_id') %}hidden{% endif %}>{{ errors.get('local_id', '') }}</div></div>
+                            <div class="form-group"><label for="curso">Curso</label><input type="text" id="curso" name="curso" class="readonly-field" readonly value="{{ form_data.get('curso', nome_curso) }}"></div>
                             <div class="form-group full"><label for="opcao_id">Turma *</label><select id="opcao_id" name="opcao_id" disabled><option value="">Selecione um local primeiro</option></select><div class="balao-erro" id="opcao_id-error" {% if not errors.get('opcao_id') %}hidden{% endif %}>{{ errors.get('opcao_id', '') }}</div></div>
                             <input type="hidden" id="local" name="local" value="{{ form_data.get('local', '') }}">
                             <input type="hidden" id="curso_id" name="curso_id" value="{{ form_data.get('curso_id', '1') }}">
@@ -406,7 +390,7 @@ TEMPLATE_WIZARD = r'''
                             <div class="form-group"><label for="horario">HOR&#193;RIO</label><input type="text" id="horario" name="horario" class="readonly-field" readonly value="{{ form_data.get('horario', '') }}"></div>
                             <div class="form-group"><label for="data_inicio">DATA DE IN&#205;CIO</label><input type="text" id="data_inicio" name="data_inicio" class="readonly-field" readonly value="{{ form_data.get('data_inicio', '') }}"></div>
                             <div class="form-group"><label for="encerramento">T&#201;RMINO</label><input type="text" id="encerramento" name="encerramento" class="readonly-field" readonly value="{{ form_data.get('encerramento', '') }}"></div>
-                            <div class="form-group full"><label for="endereco_curso">ENDERE&#199;O</label><div class="input-with-action"><input type="text" id="endereco_curso" name="endereco_curso" class="readonly-field" readonly value="{{ form_data.get('endereco_curso', '') }}"><button type="button" class="icon-button" id="btn-copiar-endereco" title="Copiar endere&#231;o">COPIAR &#128203;</button></div></div>
+                            <div class="form-group full"><label for="endereco_curso">ENDERE&#199;O</label><div class="input-with-action"><input type="text" id="endereco_curso" name="endereco_curso" class="readonly-field" readonly value="{{ form_data.get('endereco_curso', '') }}"><button type="button" class="icon-button" id="btn-copiar-endereco">COPIAR &#128203;</button></div></div>
                         </div>
                         <div class="panel-actions">
                             <button type="button" class="secondary-button" data-prev="dados">Voltar</button>
@@ -442,10 +426,10 @@ TEMPLATE_WIZARD = r'''
                             </div></div>
                             <div class="review-box full"><div class="form-group"><label for="como_conheceu">Como conheceu (opcional)</label><input type="text" id="como_conheceu" name="como_conheceu" maxlength="120" placeholder="Digite como conheceu o projeto" value="{{ form_data.get('como_conheceu', '') }}"><div class="balao-erro" id="como_conheceu-error" {% if not errors.get('como_conheceu') %}hidden{% endif %}>{{ errors.get('como_conheceu', '') }}</div></div></div>
                             <div class="review-box full">
-                                <div style="margin-bottom:10px; color:#2f5fb4; font-size:0.98rem; text-align:left;"><strong>Elegibilidade:</strong> Este curso &#233; destinado a pessoas com 16 anos ou mais interessadas em qualifica&#231;&#227;o profissional.</div>
+                                <div style="margin-bottom:10px; color:#2f5fb4; font-size:0.98rem; text-align:left;"><strong>Elegibilidade:</strong> Este curso &#233; destinado a pessoas com 16 anos ou mais.</div>
                                 <label class="review-check" for="confirma_dados">
                                     <input type="checkbox" id="confirma_dados" name="confirma_dados" value="sim" {% if form_data.get('confirma_dados') %}checked{% endif %}>
-                                    <span>Confirmo que tenho 16 anos ou mais e interesse em participar do curso selecionado.<br>Todas as informa&#231;&#245;es fornecidas s&#227;o verdadeiras e estou de acordo com os termos de participa&#231;&#227;o.<br>Autorizo o uso dos meus dados para fins de inscri&#231;&#227;o e contato relacionado ao curso.<br>Tamb&#233;m autorizo o uso da minha imagem para divulga&#231;&#227;o nos canais de comunica&#231;&#227;o e redes sociais do projeto e da Prefeitura do Rio de Janeiro.</span>
+                                    <span>Confirmo que tenho 16 anos ou mais e interesse em participar do curso selecionado.<br>Todas as informa&#231;&#245;es fornecidas s&#227;o verdadeiras e estou de acordo com os termos de participa&#231;&#227;o.<br>Autorizo o uso dos meus dados para fins de inscri&#231;&#227;o e contato relacionado ao curso.<br>Tamb&#233;m autorizo o uso da minha imagem para divulga&#231;&#227;o nos canais do projeto e da Prefeitura do Rio.</span>
                                 </label>
                                 <div style="margin-top:10px;"><strong>Ao confirmar voc&#234; declara a ci&#234;ncia de que:</strong><ul><li>O curso &#233; totalmente gratuito</li><li>Os dados ser&#227;o usados apenas para inscri&#231;&#227;o</li></ul></div>
                                 <div class="balao-erro" id="confirma_dados-error" {% if not errors.get('confirma_dados') %}hidden{% endif %}>{{ errors.get('confirma_dados', '') }}</div>
@@ -462,6 +446,7 @@ TEMPLATE_WIZARD = r'''
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            var NOME_CURSO = {{ nome_curso|tojson }};
             var stepOrder = ['index','dados','escolher','revisao'];
             var progressByStep = {index:25,dados:45,escolher:70,revisao:90};
             var form=document.getElementById('wizard-form'),fill=document.getElementById('wizard-fill');
@@ -474,40 +459,31 @@ TEMPLATE_WIZARD = r'''
             var courseOptionsById=Object.fromEntries(courseOptions.map(function(o){return[String(o.id),o];}));
             var nomeInput=document.getElementById('nome'),generoInput=document.getElementById('genero'),cpfInput=document.getElementById('cpf'),nascimentoInput=document.getElementById('nascimento'),whatsappInput=document.getElementById('whatsapp'),cepInput=document.getElementById('cep'),bairroInput=document.getElementById('bairro'),emailInput=document.getElementById('email');
             var localIdInput=document.getElementById('local_id'),optionSelect=document.getElementById('opcao_id'),localInput=document.getElementById('local'),cursoInput=document.getElementById('curso'),turmaInput=document.getElementById('turma'),diasAulaInput=document.getElementById('dias_aula'),horarioInput=document.getElementById('horario'),dataInicioInput=document.getElementById('data_inicio'),encerramentoInput=document.getElementById('encerramento'),enderecoInput=document.getElementById('endereco_curso'),confirmaDadosInput=document.getElementById('confirma_dados'),btnCopiarEndereco=document.getElementById('btn-copiar-endereco');
-            function somenteDigitos(v){return(v||'').replace(/\D/g,'');}
+            function somenteDigitos(v){return(v||'').replace(/\\D/g,'');}
             function setError(id,msg){var f=document.getElementById(id),e=document.getElementById(id+'-error');if(f)f.classList.toggle('erro-campo',Boolean(msg));if(e){e.textContent=msg||'';e.hidden=!msg;}}
-            function atualizarTurmasPorLocal(localId,selectedOpcaoId){
-                var turmas=courseOptions.filter(function(o){return String(o.local_id)===String(localId||'');});
-                optionSelect.disabled=false;
-                optionSelect.innerHTML='';
-                var ph=document.createElement('option');ph.value='';ph.textContent='Selecione uma turma';ph.selected=!selectedOpcaoId;optionSelect.appendChild(ph);
-                turmas.forEach(function(o){var opt=document.createElement('option');opt.value=String(o.id);opt.textContent=o.turma;opt.selected=String(o.id)===String(selectedOpcaoId||'');optionSelect.appendChild(opt);});
-                if(turmas.length===1&&!selectedOpcaoId){optionSelect.value=String(turmas[0].id);aplicarOpcao(turmas[0].id);}
-                else if(optionSelect.value){aplicarOpcao(optionSelect.value);}
-                else{aplicarOpcao('');}
-            }
+            function atualizarTurmasPorLocal(localId,selectedOpcaoId){var turmas=courseOptions.filter(function(o){return String(o.local_id)===String(localId||'');});optionSelect.disabled=false;optionSelect.innerHTML='';var ph=document.createElement('option');ph.value='';ph.textContent='Selecione uma turma';ph.selected=!selectedOpcaoId;optionSelect.appendChild(ph);turmas.forEach(function(o){var opt=document.createElement('option');opt.value=String(o.id);opt.textContent=o.turma;opt.selected=String(o.id)===String(selectedOpcaoId||'');optionSelect.appendChild(opt);});if(turmas.length===1&&!selectedOpcaoId){optionSelect.value=String(turmas[0].id);aplicarOpcao(turmas[0].id);}else if(optionSelect.value){aplicarOpcao(optionSelect.value);}else{aplicarOpcao('');}}
             function aplicarOpcao(opcaoId){var op=courseOptionsById[String(opcaoId||'')];if(!op){localInput.value='';turmaInput.value='';diasAulaInput.value='';horarioInput.value='';dataInicioInput.value='';encerramentoInput.value='';enderecoInput.value='';return;}localInput.value=op.local;turmaInput.value=op.turma;diasAulaInput.value=op.dias_aula;horarioInput.value=op.horario;dataInicioInput.value=op.data_inicio;encerramentoInput.value=op.encerramento;enderecoInput.value=op.endereco_curso;setError('opcao_id','');syncReview();}
             localIdInput.addEventListener('change',function(){setError('local_id','');if(localIdInput.value){atualizarTurmasPorLocal(localIdInput.value,'');}else{optionSelect.disabled=true;optionSelect.innerHTML='<option value="">Selecione um local primeiro</option>';aplicarOpcao('');}syncReview();});
             optionSelect.addEventListener('change',function(){aplicarOpcao(optionSelect.value);});
-            if(btnCopiarEndereco&&enderecoInput){btnCopiarEndereco.addEventListener('click',function(){navigator.clipboard.writeText(enderecoInput.value).then(function(){btnCopiarEndereco.textContent='COPIADO \u2705';}).catch(function(){enderecoInput.select();document.execCommand('copy');btnCopiarEndereco.textContent='COPIADO \u2705';});setTimeout(function(){btnCopiarEndereco.textContent='COPIAR \uD83D\uDCCB';},1200);});}
+            if(btnCopiarEndereco&&enderecoInput){btnCopiarEndereco.addEventListener('click',function(){navigator.clipboard.writeText(enderecoInput.value).then(function(){btnCopiarEndereco.textContent='COPIADO ✅';}).catch(function(){enderecoInput.select();document.execCommand('copy');btnCopiarEndereco.textContent='COPIADO ✅';});setTimeout(function(){btnCopiarEndereco.textContent='COPIAR 📋';},1200);});}
             function mostrarPasso(step){panels.forEach(function(p){p.classList.toggle('ativo',p.dataset.step===step);});labels.forEach(function(l){l.classList.toggle('ativo',l.dataset.stepLabel===step);});fill.style.width=(progressByStep[step]||25)+'%';window.scrollTo({top:0,behavior:'smooth'});}
             function syncReview(){reviewTargets.forEach(function(t){var id=t.dataset.review;var f=document.getElementById(id);if(!f){t.textContent='';return;}if(f.tagName==='SELECT'){var s=f.options[f.selectedIndex];t.textContent=s?s.text.trim():'';}else{t.textContent=f.value.trim();}});}
-            function validarCPF(cpf){var d=somenteDigitos(cpf);if(d.length!==11||/^(\d)\1+$/.test(d))return false;var s=0,g;for(var i=0;i<9;i++)s+=Number(d[i])*(10-i);g=(s*10)%11;if(g===10)g=0;if(g!==Number(d[9]))return false;s=0;for(var i=0;i<10;i++)s+=Number(d[i])*(11-i);g=(s*10)%11;if(g===10)g=0;return g===Number(d[10]);}
-            function validarEmail(e){return /^[a-zA-Z0-9_.+-]+@((gmail|hotmail|outlook|yahoo)\.(com|com\.br))$/i.test((e||'').trim());}
+            function validarCPF(cpf){var d=somenteDigitos(cpf);if(d.length!==11||/^(\\d)\\1+$/.test(d))return false;var s=0,g;for(var i=0;i<9;i++)s+=Number(d[i])*(10-i);g=(s*10)%11;if(g===10)g=0;if(g!==Number(d[9]))return false;s=0;for(var i=0;i<10;i++)s+=Number(d[i])*(11-i);g=(s*10)%11;if(g===10)g=0;return g===Number(d[10]);}
+            function validarEmail(e){return /^[a-zA-Z0-9_.+-]+@((gmail|hotmail|outlook|yahoo)\\.(com|com\\.br))$/i.test((e||'').trim());}
             function idadePermitida(v){var p=(v||'').split('/');if(p.length!==3)return false;var d=new Date(Number(p[2]),Number(p[1])-1,Number(p[0]));if(isNaN(d.getTime())||d.getDate()!==Number(p[0])||d.getMonth()!==Number(p[1])-1)return false;var h=new Date();var i=h.getFullYear()-d.getFullYear();if(h.getMonth()-d.getMonth()<0||(h.getMonth()===d.getMonth()&&h.getDate()<d.getDate()))i--;return i>=16&&i<=90;}
             function validarDDD(w){var d=somenteDigitos(w);if(d.length<11)return false;return['11','12','13','14','15','16','17','18','19','21','22','24','27','28','31','32','33','34','35','37','38','41','42','43','44','45','46','47','48','49','51','53','54','55','61','62','63','64','65','66','67','68','69','71','73','74','75','77','79','81','82','83','84','85','86','87','88','89','91','92','93','94','95','96','97','98','99'].includes(d.slice(0,2));}
-            function mascCPF(){var v=somenteDigitos(cpfInput.value).slice(0,11);if(v.length>9)v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/,'$1.$2.$3-$4');else if(v.length>6)v=v.replace(/(\d{3})(\d{3})(\d{1,3})/,'$1.$2.$3');else if(v.length>3)v=v.replace(/(\d{3})(\d{1,3})/,'$1.$2');cpfInput.value=v;}
-            function mascNasc(){var v=somenteDigitos(nascimentoInput.value).slice(0,8);if(v.length>4)v=v.replace(/(\d{2})(\d{2})(\d{1,4})/,'$1/$2/$3');else if(v.length>2)v=v.replace(/(\d{2})(\d{1,2})/,'$1/$2');nascimentoInput.value=v;}
-            function mascWpp(){var v=somenteDigitos(whatsappInput.value).slice(0,11);if(v.length>6)v=v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3');else if(v.length>2)v=v.replace(/(\d{2})(\d{1,5})/,'($1) $2');whatsappInput.value=v;}
-            function mascCep(){var v=somenteDigitos(cepInput.value).slice(0,8);if(v.length>5)v=v.replace(/(\d{5})(\d{1,3})/,'$1-$2');cepInput.value=v;}
-            function vNome(){var v=nomeInput.value.trim();if(!v){setError('nome','Digite seu nome completo.');return false;}if(v.length>50){setError('nome','M\u00e1ximo 50 caracteres.');return false;}setError('nome','');return true;}
-            function vGenero(){if(!generoInput.value){setError('genero','Selecione o g\u00eanero.');return false;}setError('genero','');return true;}
-            function vCPF(){if(!validarCPF(cpfInput.value)){setError('cpf','CPF inv\u00e1lido.');return false;}setError('cpf','');return true;}
+            function mascCPF(){var v=somenteDigitos(cpfInput.value).slice(0,11);if(v.length>9)v=v.replace(/(\\d{3})(\\d{3})(\\d{3})(\\d{1,2})/,'$1.$2.$3-$4');else if(v.length>6)v=v.replace(/(\\d{3})(\\d{3})(\\d{1,3})/,'$1.$2.$3');else if(v.length>3)v=v.replace(/(\\d{3})(\\d{1,3})/,'$1.$2');cpfInput.value=v;}
+            function mascNasc(){var v=somenteDigitos(nascimentoInput.value).slice(0,8);if(v.length>4)v=v.replace(/(\\d{2})(\\d{2})(\\d{1,4})/,'$1/$2/$3');else if(v.length>2)v=v.replace(/(\\d{2})(\\d{1,2})/,'$1/$2');nascimentoInput.value=v;}
+            function mascWpp(){var v=somenteDigitos(whatsappInput.value).slice(0,11);if(v.length>6)v=v.replace(/(\\d{2})(\\d{5})(\\d{0,4})/,'($1) $2-$3');else if(v.length>2)v=v.replace(/(\\d{2})(\\d{1,5})/,'($1) $2');whatsappInput.value=v;}
+            function mascCep(){var v=somenteDigitos(cepInput.value).slice(0,8);if(v.length>5)v=v.replace(/(\\d{5})(\\d{1,3})/,'$1-$2');cepInput.value=v;}
+            function vNome(){var v=nomeInput.value.trim();if(!v){setError('nome','Digite seu nome completo.');return false;}if(v.length>50){setError('nome','Máximo 50 caracteres.');return false;}setError('nome','');return true;}
+            function vGenero(){if(!generoInput.value){setError('genero','Selecione o gênero.');return false;}setError('genero','');return true;}
+            function vCPF(){if(!validarCPF(cpfInput.value)){setError('cpf','CPF inválido.');return false;}setError('cpf','');return true;}
             function vNasc(){if(!idadePermitida(nascimentoInput.value)){setError('nascimento','Idade permitida: 16 a 90 anos.');return false;}setError('nascimento','');return true;}
-            function vWpp(){var d=somenteDigitos(whatsappInput.value);if(d.length!==11||!/^\(\d{2}\) \d{5}-\d{4}$/.test(whatsappInput.value)||!validarDDD(whatsappInput.value)){setError('whatsapp','Informe um WhatsApp com DDD v\u00e1lido do Brasil.');return false;}setError('whatsapp','');return true;}
-            function vCep(){if(!/^\d{5}-\d{3}$/.test(cepInput.value.trim())){setError('cep','CEP inv\u00e1lido. Formato: 00000-000.');return false;}setError('cep','');return true;}
-            function vBairro(){var v=bairroInput.value.trim();if(!v){setError('bairro','Informe o bairro.');return false;}if(v.length>40){setError('bairro','M\u00e1ximo 40 caracteres.');return false;}setError('bairro','');return true;}
-            function vEmail(){if(!validarEmail(emailInput.value)){setError('email','Digite um e-mail v\u00e1lido (Gmail, Hotmail, Outlook ou Yahoo).');return false;}setError('email','');return true;}
+            function vWpp(){var d=somenteDigitos(whatsappInput.value);if(d.length!==11||!/^\\(\\d{2}\\) \\d{5}-\\d{4}$/.test(whatsappInput.value)||!validarDDD(whatsappInput.value)){setError('whatsapp','Informe um WhatsApp com DDD válido do Brasil.');return false;}setError('whatsapp','');return true;}
+            function vCep(){if(!/^\\d{5}-\\d{3}$/.test(cepInput.value.trim())){setError('cep','CEP inválido. Formato: 00000-000.');return false;}setError('cep','');return true;}
+            function vBairro(){var v=bairroInput.value.trim();if(!v){setError('bairro','Informe o bairro.');return false;}if(v.length>40){setError('bairro','Máximo 40 caracteres.');return false;}setError('bairro','');return true;}
+            function vEmail(){if(!validarEmail(emailInput.value)){setError('email','Digite um e-mail válido (Gmail, Hotmail, Outlook ou Yahoo).');return false;}setError('email','');return true;}
             function validarPassoDados(){var checks=[{ok:vNome(),f:nomeInput},{ok:vGenero(),f:generoInput},{ok:vCPF(),f:cpfInput},{ok:vNasc(),f:nascimentoInput},{ok:vWpp(),f:whatsappInput},{ok:vCep(),f:cepInput},{ok:vBairro(),f:bairroInput},{ok:vEmail(),f:emailInput}];var first=checks.find(function(c){return!c.ok;});if(first){first.f.focus();return false;}return true;}
             function validarPassoEscolher(){if(!localIdInput.value){setError('local_id','Selecione um local.');localIdInput.focus();return false;}if(!optionSelect.value){setError('opcao_id','Selecione uma turma.');optionSelect.focus();return false;}return true;}
             function validarPassoRevisao(){if(!confirmaDadosInput.checked){setError('confirma_dados','Confirme os dados para finalizar.');confirmaDadosInput.focus();return false;}setError('confirma_dados','');return true;}
@@ -524,9 +500,9 @@ TEMPLATE_WIZARD = r'''
             emailInput.addEventListener('input',function(){if(emailInput.value.trim())vEmail();else setError('email','');syncReview();});
             confirmaDadosInput.addEventListener('change',function(){if(confirmaDadosInput.checked)setError('confirma_dados','');});
             ['nome','genero','whatsapp','cep','bairro','email','como_conheceu','local_id','opcao_id'].forEach(function(id){var f=document.getElementById(id);if(f){f.addEventListener('input',syncReview);f.addEventListener('change',syncReview);}});
-            function initBenefitsSlider(slider){var slides=Array.from(slider.querySelectorAll('.benefit-slide')),dotsHost=slider.querySelector('[data-benefits-dots]'),prevBtn=slider.querySelector('[data-benefits-prev]'),nextBtn=slider.querySelector('[data-benefits-next]');if(!slides.length||!dotsHost||!prevBtn||!nextBtn)return;var cur=Math.max(slides.findIndex(function(s){return s.classList.contains('ativo');}),0),timer;var dots=slides.map(function(_,i){var dot=document.createElement('button');dot.type='button';dot.className='benefits-dot';dot.setAttribute('aria-label','Benef\u00edcio '+(i+1));dot.addEventListener('click',function(){show(i);restart();});dotsHost.appendChild(dot);return dot;});function show(i){cur=(i+slides.length)%slides.length;slides.forEach(function(s,j){s.classList.toggle('ativo',j===cur);});dots.forEach(function(d,j){d.classList.toggle('ativo',j===cur);});}function restart(){clearInterval(timer);timer=setInterval(function(){show(cur+1);},3200);}prevBtn.addEventListener('click',function(){show(cur-1);restart();});nextBtn.addEventListener('click',function(){show(cur+1);restart();});slider.addEventListener('mouseenter',function(){clearInterval(timer);});slider.addEventListener('mouseleave',restart);show(cur);restart();}
+            function initBenefitsSlider(slider){var slides=Array.from(slider.querySelectorAll('.benefit-slide')),dotsHost=slider.querySelector('[data-benefits-dots]'),prevBtn=slider.querySelector('[data-benefits-prev]'),nextBtn=slider.querySelector('[data-benefits-next]');if(!slides.length||!dotsHost||!prevBtn||!nextBtn)return;var cur=Math.max(slides.findIndex(function(s){return s.classList.contains('ativo');}),0),timer;var dots=slides.map(function(_,i){var dot=document.createElement('button');dot.type='button';dot.className='benefits-dot';dot.setAttribute('aria-label','Benefício '+(i+1));dot.addEventListener('click',function(){show(i);restart();});dotsHost.appendChild(dot);return dot;});function show(i){cur=(i+slides.length)%slides.length;slides.forEach(function(s,j){s.classList.toggle('ativo',j===cur);});dots.forEach(function(d,j){d.classList.toggle('ativo',j===cur);});}function restart(){clearInterval(timer);timer=setInterval(function(){show(cur+1);},3200);}prevBtn.addEventListener('click',function(){show(cur-1);restart();});nextBtn.addEventListener('click',function(){show(cur+1);restart();});slider.addEventListener('mouseenter',function(){clearInterval(timer);});slider.addEventListener('mouseleave',restart);show(cur);restart();}
             var initLocalId='{{ form_data.get("local_id", "") }}',initOpcaoId='{{ form_data.get("opcao_id", "") }}';
-            cursoInput.value='\U0001f4da ENCCEJA';
+            cursoInput.value = NOME_CURSO;
             if(initLocalId){localIdInput.value=initLocalId;atualizarTurmasPorLocal(initLocalId,initOpcaoId);}else{optionSelect.disabled=true;}
             benefitsSliders.forEach(initBenefitsSlider);
             syncReview();
@@ -535,8 +511,8 @@ TEMPLATE_WIZARD = r'''
     </script>
 </body>
 </html>
-'''
-TEMPLATE_CONFIRMACAO = r'''
+"""
+TEMPLATE_CONFIRMACAO = """
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -621,17 +597,18 @@ TEMPLATE_CONFIRMACAO = r'''
     </div>
 </body>
 </html>
-'''
+"""
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "chave-secreta-para-sessao")
+
 
 def get_default_form_data(source=None):
     form_data = {
         "nome": "", "genero": "", "cpf": "", "nascimento": "",
         "whatsapp": "", "cep": "", "bairro": "", "email": "",
         "local_id": "", "curso_id": "1", "opcao_id": "",
-        "local": "", "curso": "\U0001f4da ENCCEJA", "turma": "",
+        "local": "", "curso": NOME_CURSO, "turma": "",
         "dias_aula": "", "horario": "", "data_inicio": "",
         "encerramento": "", "endereco_curso": "",
         "como_conheceu": "", "confirma_dados": "",
@@ -646,6 +623,7 @@ def get_default_form_data(source=None):
         fill_form_data_from_selection(form_data)
     return form_data
 
+
 def cpf_valido(cpf):
     digits = re.sub(r"\D", "", cpf or "")
     if len(digits) != 11 or len(set(digits)) == 1:
@@ -656,6 +634,7 @@ def cpf_valido(cpf):
     total = sum(int(digits[i]) * (11 - i) for i in range(10))
     d = (total * 10) % 11; d = 0 if d == 10 else d
     return d == int(digits[10])
+
 
 def idade_aceita(nascimento):
     try:
@@ -668,43 +647,47 @@ def idade_aceita(nascimento):
         idade -= 1
     return 16 <= idade <= 90
 
+
 def whatsapp_valido(whatsapp):
     digits = re.sub(r"\D", "", whatsapp or "")
     if len(digits) != 11: return False
     if not re.fullmatch(r"\(\d{2}\) \d{5}-\d{4}", whatsapp or ""): return False
     return digits[:2] in VALID_DDDS
 
+
 def validate_form_data(form_data):
     errors = {}
     selected_local  = get_local_option(form_data["local_id"])
     selected_option = get_course_option(form_data["opcao_id"])
     if not selected_local:
-        errors["local_id"] = "Selecione um local v\u00e1lido."
+        errors["local_id"] = "Selecione um local válido."
     if not selected_option or selected_option["local_id"] != form_data["local_id"]:
-        errors["opcao_id"] = "Selecione uma turma v\u00e1lida."
+        errors["opcao_id"] = "Selecione uma turma válida."
     nome = form_data["nome"]
     if not nome: errors["nome"] = "Digite seu nome completo."
-    elif len(nome) > 50: errors["nome"] = "M\u00e1ximo 50 caracteres."
+    elif len(nome) > 50: errors["nome"] = "Máximo 50 caracteres."
     elif not NAME_PATTERN.fullmatch(nome): errors["nome"] = "Use apenas letras e sinais permitidos."
-    if form_data["genero"] not in {"Feminino", "Masculino", "Outro", "Prefiro n\u00e3o dizer"}:
-        errors["genero"] = "Selecione o g\u00eanero."
-    if not cpf_valido(form_data["cpf"]): errors["cpf"] = "CPF inv\u00e1lido."
+    if form_data["genero"] not in {"Feminino", "Masculino", "Outro", "Prefiro não dizer"}:
+        errors["genero"] = "Selecione o gênero."
+    if not cpf_valido(form_data["cpf"]): errors["cpf"] = "CPF inválido."
     if not idade_aceita(form_data["nascimento"]): errors["nascimento"] = "Idade permitida: 16 a 90 anos."
-    if not whatsapp_valido(form_data["whatsapp"]): errors["whatsapp"] = "Informe um WhatsApp com DDD v\u00e1lido do Brasil."
-    if not re.fullmatch(r"\d{5}-\d{3}", form_data["cep"] or ""): errors["cep"] = "CEP inv\u00e1lido. Formato: 00000-000."
+    if not whatsapp_valido(form_data["whatsapp"]): errors["whatsapp"] = "Informe um WhatsApp com DDD válido do Brasil."
+    if not re.fullmatch(r"\d{5}-\d{3}", form_data["cep"] or ""): errors["cep"] = "CEP inválido. Formato: 00000-000."
     bairro = form_data["bairro"]
     if not bairro: errors["bairro"] = "Informe o bairro."
-    elif len(bairro) > 40: errors["bairro"] = "M\u00e1ximo 40 caracteres."
+    elif len(bairro) > 40: errors["bairro"] = "Máximo 40 caracteres."
     if not ALLOWED_EMAIL_PATTERN.fullmatch(form_data["email"] or ""):
-        errors["email"] = "Digite um e-mail v\u00e1lido (Gmail, Hotmail, Outlook ou Yahoo)."
+        errors["email"] = "Digite um e-mail válido (Gmail, Hotmail, Outlook ou Yahoo)."
     if form_data["confirma_dados"] != "sim":
-        errors["confirma_dados"] = "Confirme os dados para finalizar a inscri\u00e7\u00e3o."
+        errors["confirma_dados"] = "Confirme os dados para finalizar a inscrição."
     return errors
+
 
 def error_step(errors):
     if "confirma_dados" in errors: return "revisao"
     if "local_id" in errors or "opcao_id" in errors: return "escolher"
     return "dados"
+
 
 def render_wizard(form_data=None, errors=None, current_step="index"):
     current_form_data = form_data or get_default_form_data()
@@ -715,15 +698,18 @@ def render_wizard(form_data=None, errors=None, current_step="index"):
         local_options  = LOCAL_OPTIONS,
         course_catalog = COURSE_CATALOG,
         course_options = COURSE_OPTIONS,
+        nome_curso     = NOME_CURSO,
         current_step   = current_step,
         errors         = errors or {},
         form_data      = current_form_data,
-        generos        = ["Feminino", "Masculino", "Outro", "Prefiro n\u00e3o dizer"],
+        generos        = ["Feminino", "Masculino", "Outro", "Prefiro não dizer"],
     )
+
 
 @app.route("/", methods=["GET"])
 def home():
     return render_wizard()
+
 
 @app.route("/inscricao", methods=["GET", "POST"])
 def inscricao_unica():
@@ -755,11 +741,13 @@ def inscricao_unica():
         print("Erro ao enviar para Supabase:", exc)
     return redirect(url_for("confirmacao"))
 
+
 @app.route("/curso",   methods=["GET", "POST"])
 @app.route("/revisao", methods=["GET", "POST"])
 @app.route("/wizard",  methods=["GET"])
 def legacy_routes():
     return redirect(url_for("home"))
+
 
 @app.route("/confirmacao", methods=["GET"])
 def confirmacao():
@@ -773,6 +761,7 @@ def confirmacao():
         whatsapp_share_url = build_whatsapp_share_url(home_url),
     )
 
+
 # ── SUPABASE ──────────────────────────────────────────────────────────────────
 import requests as _requests
 
@@ -785,9 +774,11 @@ SUPABASE_API_KEY = os.environ.get(
     "jyUskwXkc54ZcMPyADLFN6LvZO0I60e3",
 )
 
+
 def normalize_phone_number(phone):
     digits = re.sub(r"[^\d]", "", phone or "")
     return f"55{digits}" if len(digits) == 11 else digits
+
 
 def send_registration_to_supabase(form_data):
     phone = normalize_phone_number(form_data.get("whatsapp", ""))
@@ -812,6 +803,7 @@ def send_registration_to_supabase(form_data):
     if not response.ok:
         raise RuntimeError(f"Supabase retornou {response.status_code}: {response.text[:500]}")
     return response
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
