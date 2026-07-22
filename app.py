@@ -397,7 +397,7 @@ TEMPLATE_WIZARD = r'''
                         <h2 class="panel-title">Escolha seu curso</h2>
                         <div class="step-grid step-grid--stacked">
                             <div class="form-group"><label for="local_id">Local *</label><select id="local_id" name="local_id"><option value="">Selecione um local</option>{% for local_option in local_options %}<option value="{{ local_option.id }}" {% if form_data.get('local_id') == local_option.id %}selected{% endif %}>{{ local_option.nome }}</option>{% endfor %}</select><div class="balao-erro" id="local_id-error" {% if not errors.get('local_id') %}hidden{% endif %}>{{ errors.get('local_id', '') }}</div></div>
-                            <div class="form-group"><label for="curso">Curso</label><input type="text" id="curso" name="curso" class="readonly-field" readonly value="{{ form_data.get('curso', '\U0001f4da ENCCEJA') }}"></div>
+                            <div class="form-group"><label for="curso">Curso</label><input type="text" id="curso" name="curso" class="readonly-field" readonly value="{{ form_data.get('curso', 'ENCCEJA') }}"></div>
                             <div class="form-group full"><label for="opcao_id">Turma *</label><select id="opcao_id" name="opcao_id" disabled><option value="">Selecione um local primeiro</option></select><div class="balao-erro" id="opcao_id-error" {% if not errors.get('opcao_id') %}hidden{% endif %}>{{ errors.get('opcao_id', '') }}</div></div>
                             <input type="hidden" id="local" name="local" value="{{ form_data.get('local', '') }}">
                             <input type="hidden" id="curso_id" name="curso_id" value="{{ form_data.get('curso_id', '1') }}">
