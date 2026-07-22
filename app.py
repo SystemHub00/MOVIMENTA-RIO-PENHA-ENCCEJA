@@ -70,8 +70,8 @@ TURMA_OPTIONS = [
 # HORÁRIOS
 # ──────────────────────────────────────────────
 SCHEDULE_OPTIONS = {
-    "1": {"dias_aula": "Quarta e S\u00e1bado", "horario": "18h30 \u00e0s 21h30"},
-    "2": {"dias_aula": "S\u00e1bado", "horario": "8h \u00e0s 14h"},
+    "1": {"dias_aula": "Quarta e Sabado", "horario": "18h30 \u00e0s 21h30"},
+    "2": {"dias_aula": "Sabado", "horario": "8h \u00e0s 14h"},
 }
 
 # ──────────────────────────────────────────────
