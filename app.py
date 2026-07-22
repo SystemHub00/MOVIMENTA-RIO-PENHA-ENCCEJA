@@ -28,14 +28,14 @@ VALID_DDDS = {
 # LOCAIS
 # ──────────────────────────────────────────────
 LOCAL_OPTIONS = [
-    {"id": "1", "nome": "N\u00daLCEO PENHA (PROGRAMA JOS\u00dA ARANHA)"},
+    {"id": "1", "nome": "NULCEO PENHA (PROGRAMA JOS\u00dA ARANHA)"},
 ]
 
 # ──────────────────────────────────────────────
 # CATÁLOGO DE CURSOS
 # ──────────────────────────────────────────────
 COURSE_CATALOG = [
-    {"id": "1", "nome": "\U0001f4da ENCCEJA"},
+    {"id": "1", "nome": "ENCCEJA"},
 ]
 
 # ──────────────────────────────────────────────
